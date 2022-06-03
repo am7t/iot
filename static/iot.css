@@ -31,6 +31,10 @@
 	text-shadow: var(--text-shadow);
 }
 
+img {
+ width: 80%;
+}
+
 body, .demo-header, .mdl-layout--fixed-drawer, .mdl-layout__drawer, .mdl-menu, .mdl-layout__header .mdl-layout__header-row, .mdl-layout-container, .mdl-layout__header .mdl-layout__drawer-button {
 	background-color: var(--background-color)
 }
