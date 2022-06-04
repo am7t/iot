@@ -9,8 +9,8 @@
 #define humidityVariableID "5c71086a1d84723fec62b9bd" // Put your variable ID here
 #define locationVariableID "5d0dd2c21d8472636d8f4e75"
 
-#define WIFISSID "POLLAYIL01" // Put here your Wi-Fi SSID
-#define PASSWORD "october15" // Put here your Wi-Fi password
+#define WIFISSID "Name WiFi SSID" // Put here your Wi-Fi SSID
+#define PASSWORD "password@123" // Put here your Wi-Fi password
 
 Ubidots client(TOKEN);
 
