@@ -33,10 +33,10 @@ void loop()
 
   duration = pulseIn(echoPin, HIGH);
 
-  centimetre = microsecondsToCentimeters(duration);
+  cm = microsecondsToCentimeters(duration);
 
-  Serial.println(String(centimetre) + " cm");
-  client.add("distance", centimetre);
+  Serial.println(String(cm) + " cm");
+  client.add("distance", cm);
   client.sendAll(true);
   delay (2000);
 }
