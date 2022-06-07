@@ -1,47 +1,37 @@
-#define triggerPin D1
-#define echoPin D2
+#define pingPin D1
 #define ledPin D4
-
-#include "UbidotsMicroESP8266.h"
-
-#define TOKEN  "BBFF-wKJfRUIRfv5A8ebD3r0SBKA9tK5JlY"  // Put here your Ubidots TOKEN
-#define WIFISSID "hareesh" // Put here your Wi-Fi SSID
-#define PASSWORD "hareesha" // Put here your Wi-Fi password
-
-Ubidots client(TOKEN);
-
 
 void setup() 
 {
   Serial.begin(115200);
-  pinMode(triggerPin, OUTPUT);
-  pinMode(echoPin, INPUT);
   pinMode(ledPin, OUTPUT);
-  client.wifiConnection(WIFISSID, PASSWORD);
 }
 
 void loop() 
 {
   long duration;
   int cm;
+  pinMode(pingPin, OUTPUT);
 
-  digitalWrite(triggerPin, LOW);
+  digitalWrite(pingPin, LOW);
   delayMicroseconds(2);
-  digitalWrite(triggerPin, HIGH);
+  digitalWrite(pingPin, HIGH);
   delayMicroseconds(10);
-  digitalWrite(triggerPin, LOW);
+  digitalWrite(pingPin, LOW);
 
-  duration = pulseIn(echoPin, HIGH);
+  pinMode(pingPin, INPUT);
+  delayMicroseconds(2);
+  duration = pulseIn(pingPin, HIGH);
 
   cm = microsecondsToCentimeters(duration);
 
-  Serial.println(String(cm) + " cm");
-  client.add("distance", cm);
-  client.sendAll(true);
-  delay (2000);
+  Serial.println("Distance = " + String(cm) + " cm");
+  delay(200);
 }
 
-int microsecondsToCentimeters(long microseconds) 
-{
+int microsecondsToCentimeters(long microseconds) {
+  // The speed of sound is 340 m/s or 29 microseconds per centimeter.
+  // The ping from the sensor travels out and back, so to find the distance of the object we
+  // take half of the distance travelled.
   return microseconds / 29 / 2;
 }
