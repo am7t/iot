@@ -1,49 +1,49 @@
-#define triggerPin D1
-#define echoPin D2
+#define pingPin D1
 #define ledPin D4
 
 unsigned long tick = millis();
 
 void setup()
 {
-  Serial.begin(115200);
-  pinMode(triggerPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  pinMode(ledPin, OUTPUT);
+ Serial.begin(115200);
+ pinMode(pingPin, OUTPUT);
+ pinMode(ledPin, OUTPUT);
 }
 
 void loop()
 {
-  long duration;
-  int cm;
+ long duration;
+ int cm;
+ pinMode(pingPin, INPUT);
+ digitalWrite(triggerPin, LOW);
+ delayMicroseconds(2);
+ digitalWrite(triggerPin, HIGH);
+ delayMicroseconds(10);
+ digitalWrite(triggerPin, LOW);
 
-  digitalWrite(triggerPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(triggerPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(triggerPin, LOW);
+ pinMode(pingPin, OUTPUT);
+ duration = pulseIn(pingPin, HIGH);
 
-  duration = pulseIn(echoPin, HIGH);
+ cm = microsecondsToCentimeters(duration);
 
-  cm = microsecondsToCentimeters(duration);
+ Serial.println("Distance = " + String(cm) + " cm");
 
-  Serial.println("Distance = " + String(cm) + " cm");
+ if (cm < 20)
+ {
+  digitalWrite(ledPin, LOW);
+ }
+ else
+ {
+  digitalWrite(ledPin, HIGH);
+ }
 
-  if (cm < 20)
-  {
-    digitalWrite(ledPin, LOW);
-  }
-  else
-  {
-    digitalWrite(ledPin, HIGH);
-  }
-
-  delay(200);
+ delay(200);
 }
 
-int microsecondsToCentimeters(long microseconds) {
-  // The speed of sound is 340 m/s or 29 microseconds per centimeter.
-  // The ping from the sensor travels out and back, so to find the distance of the object we
-  // take half of the distance travelled.
-  return microseconds / 29 / 2;
+int microsecondsToCentimeters(long microseconds)
+{
+ // The speed of sound is 340 m/s or 29 microseconds per centimeter.
+ // The ping from the sensor travels out and back, so to find the distance of the object we
+ // take half of the distance travelled.
+ return microseconds / 29 / 2;
 }

@@ -4,65 +4,71 @@
 
 #define ledPin D4
 
-char ssid[] = SECRET_SSID;   // your network SSID (name) 
-char pass[] = SECRET_PASS;   // your network password
+#define SECRET_SSID "MySSID"     // replace MySSID with your WiFi network name
+#define SECRET_PASS "MyPassword" // replace MyPassword with your WiFi password
 
-WiFiClient  client;
+#define SECRET_CH_ID 000000       // replace 0000000 with your channel number
+#define SECRET_WRITE_APIKEY "XYZ" // replace XYZ with your channel write API Key
+
+char ssid[] = SECRET_SSID; // your network SSID (name)
+char pass[] = SECRET_PASS; // your network password
+
+WiFiClient client;
 
 // My channel details
 unsigned long myChannelNumber = SECRET_CH_ID;
-const char * myReadAPIKey = SECRET_READ_APIKEY;
+const char *myReadAPIKey = SECRET_READ_APIKEY;
 unsigned int myFieldNumber = 1;
 
-void setup() 
+void setup()
 {
-  Serial.begin(115200);  // Initialize serial
+ Serial.begin(115200); // Initialize serial
 
-  WiFi.mode(WIFI_STA); 
-  ThingSpeak.begin(client);  // Initialize ThingSpeak
+ WiFi.mode(WIFI_STA);
+ ThingSpeak.begin(client); // Initialize ThingSpeak
 
-  pinMode(ledPin, OUTPUT);
+ pinMode(ledPin, OUTPUT);
 }
 
-void loop() 
+void loop()
 {
- 
-  // Connect or reconnect to WiFi
-  if(WiFi.status() != WL_CONNECTED)
-  {
-    Serial.print("Attempting to connect to SSID: ");
-    Serial.println(SECRET_SSID);
-    while(WiFi.status() != WL_CONNECTED)
-    {
-      WiFi.begin(ssid, pass);
-      Serial.print(".");
-      delay(5000);     
-    } 
-    Serial.println("\nConnected");
-  }
 
-  int remoteDistance = ThingSpeak.readIntField(myChannelNumber, myFieldNumber, myReadAPIKey);  
+ // Connect or reconnect to WiFi
+ if (WiFi.status() != WL_CONNECTED)
+ {
+  Serial.print("Attempting to connect to SSID: ");
+  Serial.println(SECRET_SSID);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+   WiFi.begin(ssid, pass);
+   Serial.print(".");
+   delay(5000);
+  }
+  Serial.println("\nConnected");
+ }
 
-  int statusCode = ThingSpeak.getLastReadStatus();
-  
-  if(statusCode == 200)
-  {
-    Serial.println("Distance measured at remote location : " + String(remoteDistance));
-  }
-  else
-  {
-    Serial.println("Problem reading channel. HTTP error code " + String(statusCode)); 
-  }
-  
-  if (remoteDistance < 30)
-  {
-    digitalWrite(ledPin, HIGH);
-  }
+ int remoteDistance = ThingSpeak.readIntField(myChannelNumber, myFieldNumber, myReadAPIKey);
 
-  else
-  {
-    digitalWrite(ledPin, LOW);
-  }
-    
-  delay(15000);
+ int statusCode = ThingSpeak.getLastReadStatus();
+
+ if (statusCode == 200)
+ {
+  Serial.println("Distance measured at remote location : " + String(remoteDistance));
+ }
+ else
+ {
+  Serial.println("Problem reading channel. HTTP error code " + String(statusCode));
+ }
+
+ if (remoteDistance < 30)
+ {
+  digitalWrite(ledPin, HIGH);
+ }
+
+ else
+ {
+  digitalWrite(ledPin, LOW);
+ }
+
+ delay(15000);
 }

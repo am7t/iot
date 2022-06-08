@@ -1,4 +1,4 @@
-#define ledPin D0
+#define ledPin D4
 #define pirPin D2
 #define pirDelay 7
 
@@ -6,33 +6,33 @@ long tick = millis();
 
 void setup()
 {
-  Serial.begin(115200);
-  pinMode(ledPin, OUTPUT);
-  pinMode(pirPin, INPUT);
+ Serial.begin(115200);
+ pinMode(ledPin, OUTPUT);
+ pinMode(pirPin, INPUT);
 }
 
 void loop()
 {
-  int pirValue = digitalRead(pirPin);
-  if (pirValue)
-  {
-    digitalWrite(ledPin, LOW);
-    Serial.println("Motion Detected!!!...");
+ int pirValue = digitalRead(pirPin);
+ if (pirValue)
+ {
+  digitalWrite(ledPin, LOW);
+  Serial.println("Motion Detected!!!...");
 
-    for (int i = 0; i <= pirDelay; i++)
-    {
-      Serial.print(String(pirDelay - i) + " ");
-      delay(1000);
-    }
-    Serial.println();
-  }
-  else
+  for (int i = 0; i <= pirDelay; i++)
   {
-    digitalWrite(ledPin, HIGH);
-    if ((millis() - tick) > 1000)
-    {
-      Serial.println("Scanning...");
-      tick = millis();
-    }
+   Serial.print(String(pirDelay - i) + " ");
+   delay(1000);
   }
+  Serial.println();
+ }
+ else
+ {
+  digitalWrite(ledPin, HIGH);
+  if ((millis() - tick) > 1000)
+  {
+   Serial.println("Scanning...");
+   tick = millis();
+  }
+ }
 }
