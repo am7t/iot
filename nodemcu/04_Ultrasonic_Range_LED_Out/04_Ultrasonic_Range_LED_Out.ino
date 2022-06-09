@@ -25,6 +25,11 @@ void loop()
  duration = pulseIn(pingPin, HIGH);
 
  cm = microsecondsToCentimeters(duration);
+ if (cm > 20) {
+  digitalWrite(ledPin, LOW);
+ } else {
+  digitalWrite(ledPin, HIGH);
+ }
 
  Serial.println("Distance = " + String(cm) + " cm");
  delay(200);

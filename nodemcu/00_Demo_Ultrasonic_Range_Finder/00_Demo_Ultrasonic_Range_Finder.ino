@@ -1,8 +1,6 @@
 #define pingPin D1
 #define ledPin D4
 
-unsigned long tick = millis();
-
 void setup()
 {
  Serial.begin(115200);
