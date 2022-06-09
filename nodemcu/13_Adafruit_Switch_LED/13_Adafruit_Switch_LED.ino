@@ -6,14 +6,14 @@
 #define LED LED_BUILTIN
 
 #define WIFISSID "Nokia 3.1"
-#define WIFIPASSWORD "01245678"
+#define WIFIPASSWORD "234560856"
 
 // MQTT Credentials
 const char *ssid = WIFISSID;                           // setting your ap ssid
 const char *password = WIFIPASSWORD;                      // setting your ap psk
 const char *mqttServer = "io.adafruit.com";               // MQTT URL
 const char *mqttUserName = "mediumtechnica";                   // MQTT username
-const char *mqttPwd = "aio_jZZH07AP6aRDOlTuVvJTV2jvx0lq"; // MQTT password
+const char *mqttPwd = "aio_koSs603xYHVny0mIUFaZdh1c3QZr"; // MQTT password
 const char *clientID = "mediumtechnica0001";                    // client id username+0001
 const char *topic = "mediumtechnica/feeds/light";              // publish topic
 

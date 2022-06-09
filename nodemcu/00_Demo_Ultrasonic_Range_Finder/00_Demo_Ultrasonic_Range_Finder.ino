@@ -25,7 +25,7 @@ void loop()
 
  Serial.println("Distance = " + String(cm) + " cm");
 
- if (cm < 20)
+ if (cm < 15)
  {
   digitalWrite(ledPin, LOW);
  }
@@ -34,7 +34,7 @@ void loop()
   digitalWrite(ledPin, HIGH);
  }
 
- delay(200);
+ delay(500);
 }
 
 int microsecondsToCentimeters(long microseconds)
