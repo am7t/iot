@@ -6,7 +6,6 @@ unsigned long tick = millis();
 void setup()
 {
  Serial.begin(115200);
- pinMode(pingPin, OUTPUT);
  pinMode(ledPin, OUTPUT);
 }
 
@@ -14,14 +13,14 @@ void loop()
 {
  long duration;
  int cm;
- pinMode(pingPin, INPUT);
- digitalWrite(triggerPin, LOW);
- delayMicroseconds(2);
- digitalWrite(triggerPin, HIGH);
- delayMicroseconds(10);
- digitalWrite(triggerPin, LOW);
-
  pinMode(pingPin, OUTPUT);
+ digitalWrite(pingPin, LOW);
+ delayMicroseconds(2);
+ digitalWrite(pingPin, HIGH);
+ delayMicroseconds(10);
+ digitalWrite(pingPin, LOW);
+
+ pinMode(pingPin, INPUT);
  duration = pulseIn(pingPin, HIGH);
 
  cm = microsecondsToCentimeters(duration);
