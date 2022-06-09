@@ -8,7 +8,7 @@
 /****************************************
    Define Constants
  ****************************************/
-#define TOKEN "BBFF-ljWQKFtDZUp04WydBFq0aco2kqJqrT" // Your Ubidots TOKEN
+#define TOKEN "BBFF-ljco2kqJqrT" // Your Ubidots TOKEN
 #define WIFINAME "MyWiFiName" //Your SSID
 #define WIFIPASS "PassWord" // Your Wifi Pass
 
