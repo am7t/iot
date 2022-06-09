@@ -8,9 +8,9 @@
 /****************************************
    Define Constants
  ****************************************/
-#define TOKEN "BBFF-ljWQKFtDZUp04WydBFq0aco2kqJqrT" // Your Ubidots TOKEN
-#define WIFINAME "Nokia 3.1" //Your SSID
-#define WIFIPASS "1234567890" // Your Wifi Pass
+#define TOKEN "BBFF-ljWQKFtDZUp04Wy" // Your Ubidots TOKEN
+#define WIFINAME "MyWiFiHotSpot" //Your SSID
+#define WIFIPASS "MyWiFiHotSpotPassword" // Your Wifi Pass
 
 Ubidots client(TOKEN);
 
