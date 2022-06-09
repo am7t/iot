@@ -7,7 +7,7 @@
 
 // MQTT Credentials
 const char *ssid = "Nokia 3.1";                           // setting your ap ssid
-const char *password = "1234567890";                      // setting your ap psk
+const char *password = "123456";                      // setting your ap psk
 const char *mqttServer = "io.adafruit.com";               // MQTT URL
 const char *mqttUserName = "abrahampa";                   // MQTT username
 const char *mqttPwd = "aio_jZZH07AP6aRDOlTuVvJTV2jvx0lq"; // MQTT password

@@ -8,9 +8,9 @@
 /****************************************
    Define Constants
  ****************************************/
-#define TOKEN "BBFF-ljWQKFtDZUp04Wy" // Your Ubidots TOKEN
-#define WIFINAME "MyWiFiHotSpot" //Your SSID
-#define WIFIPASS "MyWiFiHotSpotPassword" // Your Wifi Pass
+#define TOKEN "BBFF-ljWQKFtDZUp04WydBFq0aco2kqJqrT" // Your Ubidots TOKEN
+#define WIFINAME "MyWiFiName" //Your SSID
+#define WIFIPASS "PassWord" // Your Wifi Pass
 
 Ubidots client(TOKEN);
 
@@ -18,18 +18,16 @@ Ubidots client(TOKEN);
    Auxiliar Functions
  ****************************************/
 
-int testValue = 0;
+int testValue = 0, nt = 0;
 unsigned long tick = millis();
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
-  /*
-    for (int i=0;i<length;i++) {
+  for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
-    }
-  */
+  }
   if ((char)payload[0] == '1') {
     digitalWrite(ledPin, LOW);
   }
@@ -59,14 +57,12 @@ void loop() {
     client.reconnect();
     client.ubidotsSubscribe("testdevice", "light"); //Insert the dataSource and Variable's Labels
   }
-  if (millis() - tick > 2000) {
-    testValue++;
-    if (testValue > 10) {
-      testValue = 0;
-    }
+  if (millis() - tick > 10000) {
+
+    testValue = int(5 + 5 * sin (2 * 3.14 * 0.05 * nt++));
     client.add("sensor_value", testValue);
     client.ubidotsPublish("testdevice");
-    client.loop();
     tick = millis();
   }
+  client.loop();
 }
