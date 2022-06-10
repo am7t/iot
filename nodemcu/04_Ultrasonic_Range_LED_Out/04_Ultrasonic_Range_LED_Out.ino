@@ -1,10 +1,15 @@
-#define pingPin D1
+#define triggerPin D1
+#define echoPin D2
+
 #define ledPin D4
 
 void setup()
 {
  Serial.begin(115200);
  pinMode(ledPin, OUTPUT);
+ 
+ pinMode(triggerPin, OUTPUT);
+ pinMode(echoPin, INPUT);
 }
 
 void loop()
@@ -12,17 +17,17 @@ void loop()
  long duration;
  int cm;
 
- pinMode(pingPin, OUTPUT);
 
- digitalWrite(pingPin, LOW);
+
+ digitalWrite(triggerPin, LOW);
  delayMicroseconds(2);
- digitalWrite(pingPin, HIGH);
+ digitalWrite(triggerPin, HIGH);
  delayMicroseconds(10);
- digitalWrite(pingPin, LOW);
+ digitalWrite(triggerPin, LOW);
 
- pinMode(pingPin, INPUT);
+
  delayMicroseconds(2);
- duration = pulseIn(pingPin, HIGH);
+ duration = pulseIn(echoPin, HIGH);
 
  cm = microsecondsToCentimeters(duration);
  if (cm > 20) {

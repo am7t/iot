@@ -20,14 +20,15 @@
 #include "Adafruit_MQTT_Client.h"
 
 #define WIFI_SSID "Nokia 3.1"
-#define WIFI_KEY  ""
+#define WIFI_KEY  "1234567890"
+
 #define ledPin D4
 #define pingPin D1
 
 #define AIO_SERVER      "io.adafruit.com"
 #define AIO_SERVERPORT  1883                   // use 8883 for SSL
 #define AIO_USERNAME    "mediumtechnica"
-#define AIO_KEY         "aio_koSs603xYHVny0mIUFaZdh1c3QZr"
+#define AIO_KEY         "aio_dsVP22439r5DCbe6C6IlFrPea0Fo"
 
 /************ Global State (you don't need to change this!) ******************/
 
@@ -108,8 +109,9 @@ void loop() {
   }
 
   // Now we can publish stuff!
+  Serial.println();
   x = getDistance();
-  Serial.print(F("\nSending distance val "));
+  Serial.print(F("Sending distance val "));
   Serial.print(x);
   Serial.print("...");
   if (! distance.publish(x)) {
