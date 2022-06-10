@@ -1,3 +1,4 @@
+#define ldrPin A0
 #define ledPin D4
 
 /****************************************
@@ -49,22 +50,27 @@ void setup() {
   client.wifiConnection(WIFINAME, WIFIPASS);
   client.begin(callback);
   pinMode(ledPin, OUTPUT);
-  client.ubidotsSubscribe("testdevice", "light"); //Insert the dataSource and Variable's Labels
+  pinMode (ldrPin, INPUT);
+  client.ubidotsSubscribe("nodemcu", "light"); //Insert the dataSource and Variable's Labels
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   if (!client.connected()) {
     client.reconnect();
-    client.ubidotsSubscribe("testdevice", "light"); //Insert the dataSource and Variable's Labels
+    client.ubidotsSubscribe("nodemcu", "light"); //Insert the dataSource and Variable's Labels
   }
-  
-  if (millis() - tick > 10000) {
 
-    testValue = int(50 + 50 * sin (2 * 3.14 / 50 * nt++));
-    client.add("sensor_value", testValue);
-    client.ubidotsPublish("testdevice");
+  if (millis() - tick > 10000) {
+    client.add("ldr-value", readLDRValue());
+    client.ubidotsPublish("nodemcu");
     tick = millis();
   }
   client.loop();
+}
+
+int readLDRValue() {
+  int ldrValue = analogRead(ldrPin);
+  Serial.println("LDR Value :" + String(ldrValue));
+  return ldrValue;
 }

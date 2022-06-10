@@ -1,3 +1,11 @@
+#include "DHT.h"
+
+#define DHTPIN D1     // Digital pin connected to the DHT sensor
+
+#define DHTTYPE DHT11   // DHT 11
+
+DHT dht(DHTPIN, DHTTYPE);
+
 #define ledPin D4
 
 /****************************************
@@ -17,9 +25,6 @@ Ubidots client(TOKEN);
 /****************************************
    Auxiliar Functions
  ****************************************/
-
-int testValue = 0;
-int nt = 0;
 unsigned long tick = millis();
 
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -49,21 +54,34 @@ void setup() {
   client.wifiConnection(WIFINAME, WIFIPASS);
   client.begin(callback);
   pinMode(ledPin, OUTPUT);
-  client.ubidotsSubscribe("testdevice", "light"); //Insert the dataSource and Variable's Labels
+  Serial.println("DHT11 test!");
+
+  dht.begin();
+  client.ubidotsSubscribe("nodemcu", "light"); //Insert the dataSource and Variable's Labels
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   if (!client.connected()) {
     client.reconnect();
-    client.ubidotsSubscribe("testdevice", "light"); //Insert the dataSource and Variable's Labels
+    client.ubidotsSubscribe("nodemcu", "light"); //Insert the dataSource and Variable's Labels
   }
-  
-  if (millis() - tick > 10000) {
 
-    testValue = int(50 + 50 * sin (2 * 3.14 / 50 * nt++));
-    client.add("sensor_value", testValue);
-    client.ubidotsPublish("testdevice");
+  if (millis() - tick > 10000) {
+    float h = dht.readHumidity();
+    float t = dht.readTemperature();
+
+    if (isnan(h) || isnan(t))
+    {
+      Serial.println(F("Failed to read from DHT sensor!"));
+      return;
+    }
+
+    Serial.println("Humidity: " + String(h) + "%, Temperature: " + String(t) + "°C ");
+
+    client.add("temperature", t);
+    client.add("humidity", h);
+    client.ubidotsPublish("nodemcu");
     tick = millis();
   }
   client.loop();

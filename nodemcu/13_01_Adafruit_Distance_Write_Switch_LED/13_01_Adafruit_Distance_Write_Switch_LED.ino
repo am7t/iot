@@ -19,7 +19,8 @@
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
 
-#include "secrets.h"
+#define WIFI_SSID "Nokia 3.1"
+#define WIFI_KEY  ""
 #define ledPin D4
 #define pingPin D1
 
