@@ -43,6 +43,24 @@ void loop()
   Serial.println("\nConnected.");
  }
 
+ int cm = getDistance();
+
+ // Write to ThingSpeak. There are up to 8 fields in a channel, allowing you to store up to 8 different
+ // pieces of information in a channel.  Here, we write to field 1.
+ int httpConnectionStatusCode = ThingSpeak.writeField(myChannelNumber, myFieldNumber, cm, myWriteAPIKey);
+ if (httpConnectionStatusCode == 200)
+ {
+  Serial.println("Channel update successful.");
+ }
+ else
+ {
+  Serial.println("Problem updating channel. HTTP error code " + String(httpConnectionStatusCode));
+ }
+
+ delay(20000); // Wait 20 seconds to update the channel again
+}
+
+int getDistance() {
  long duration;
  int cm;
 
@@ -58,22 +76,9 @@ void loop()
  duration = pulseIn(pingPin, HIGH);
 
  cm = microsecondsToCentimeters(duration);
-
- // Write to ThingSpeak. There are up to 8 fields in a channel, allowing you to store up to 8 different
- // pieces of information in a channel.  Here, we write to field 1.
- int httpConnectionStatusCode = ThingSpeak.writeField(myChannelNumber, myFieldNumber, cm, myWriteAPIKey);
- if (httpConnectionStatusCode == 200)
- {
-  Serial.println("Channel update successful.");
- }
- else
- {
-  Serial.println("Problem updating channel. HTTP error code " + String(httpConnectionStatusCode));
- }
-
- Serial.println(String(cm) + " cm");
-
- delay(20000); // Wait 20 seconds to update the channel again
+ 
+ Serial.println("Distance: " + String(cm) + " cm");
+ return cm;
 }
 
 int microsecondsToCentimeters(long microseconds)

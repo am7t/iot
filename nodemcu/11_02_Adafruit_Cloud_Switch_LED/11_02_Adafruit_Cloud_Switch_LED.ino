@@ -28,7 +28,7 @@
 #define AIO_SERVER      "io.adafruit.com"
 #define AIO_SERVERPORT  1883                   // use 8883 for SSL
 #define AIO_USERNAME    "mediumtechnica"
-#define AIO_KEY         "aio_dsVP22439r5DCbe6C6IlFrPea0Fo"
+#define AIO_KEY         "aio_Zvdv182eawSIAtRSiR352D8H6w6x"
 
 /************ Global State (you don't need to change this!) ******************/
 
@@ -41,10 +41,6 @@ WiFiClient client;
 Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
 
 /****************************** Feeds ***************************************/
-
-// Setup a feed called 'temperature' for publishing.
-// Notice MQTT paths for AIO follow the form: <username>/feeds/<feedname>
-Adafruit_MQTT_Publish distance = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/distance");
 
 // Setup a feed called 'light' for subscribing to changes.
 Adafruit_MQTT_Subscribe light = Adafruit_MQTT_Subscribe(&mqtt, AIO_USERNAME "/feeds/light");
@@ -107,19 +103,6 @@ void loop() {
       }
     }
   }
-
-  // Now we can publish stuff!
-  Serial.println();
-  x = getDistance();
-  Serial.print(F("Sending distance val "));
-  Serial.print(x);
-  Serial.print("...");
-  if (! distance.publish(x)) {
-    Serial.println(F("Failed"));
-  } else {
-    Serial.println(F("OK!"));
-  }
-
   // ping the server to keep the mqtt connection alive
   // NOT required if you are publishing once every KEEPALIVE seconds
   /*
@@ -154,32 +137,4 @@ void MQTT_connect() {
        }
   }
   Serial.println("MQTT Connected!");
-}
-
-int getDistance() {
- long duration;
- int cm;
- pinMode(pingPin, OUTPUT);
- digitalWrite(pingPin, LOW);
- delayMicroseconds(2);
- digitalWrite(pingPin, HIGH);
- delayMicroseconds(10);
- digitalWrite(pingPin, LOW);
-
- pinMode(pingPin, INPUT);
- duration = pulseIn(pingPin, HIGH);
-
- cm = microsecondsToCentimeters(duration);
-
- Serial.println("Distance = " + String(cm) + " cm");
- return cm;
-
-}
-
-int microsecondsToCentimeters(long microseconds)
-{
- // The speed of sound is 340 m/s or 29 microseconds per centimeter.
- // The ping from the sensor travels out and back, so to find the distance of the object we
- // take half of the distance travelled.
- return microseconds / 29 / 2;
 }
