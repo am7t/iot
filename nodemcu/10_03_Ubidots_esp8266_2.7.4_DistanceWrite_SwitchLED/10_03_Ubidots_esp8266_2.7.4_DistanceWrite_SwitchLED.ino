@@ -1,5 +1,6 @@
 #define ledPin D4
-#define pingPin D1
+#define triggerPin D1
+#define echoPin D2
 
 /****************************************
    Include Libraries
@@ -9,9 +10,9 @@
 /****************************************
    Define Constants
  ****************************************/
-#define TOKEN "BBFF-ljWQKFtDZUp04WydBFq0aco2kqJqrT" // Your Ubidots TOKEN
-#define WIFINAME "Nokia 3.1" //Your SSID
-#define WIFIPASS "1234567890" // Your Wifi Pass
+#define TOKEN "BBFF-ljWQKFtDZU4WydBFq0aco2kqJqrT" // Your Ubidots TOKEN
+#define WIFINAME "MyWiFiSSID" //Your SSID
+#define WIFIPASS "MyWiFiPassword" // Your Wifi Pass
 
 Ubidots client(TOKEN);
 
@@ -19,7 +20,9 @@ Ubidots client(TOKEN);
    Auxiliar Functions
  ****************************************/
 
-unsigned long tick = millis();
+unsigned long t1 = millis();
+unsigned long t2 = t1;
+int cm = 0;
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
@@ -48,6 +51,8 @@ void setup() {
   client.wifiConnection(WIFINAME, WIFIPASS);
   client.begin(callback);
   pinMode(ledPin, OUTPUT);
+  pinMode(triggerPin, OUTPUT);
+  pinMode(echoPin, INPUT);
   client.ubidotsSubscribe("nodemcu", "light"); //Insert the dataSource and Variable's Labels
 }
 
@@ -58,42 +63,41 @@ void loop() {
     client.ubidotsSubscribe("nodemcu", "light"); //Insert the dataSource and Variable's Labels
   }
   
-  if (millis() - tick > 10000) {
+  if (millis() - t1 > 200 ) {
+    cm = getDistance();
+    t1 = millis();
+  }
 
-    client.add("distance", getDistance());
+  if (millis() - t2 > 10000) {
+
+    client.add("distance", cm);
     client.ubidotsPublish("nodemcu");
-    tick = millis();
+    t2 = millis();
   }
   client.loop();
 }
 
 
+
 int getDistance() {
- long duration;
- int cm;
- 
- pinMode(pingPin, OUTPUT);
- 
- digitalWrite(pingPin, LOW);
- delayMicroseconds(2);
- digitalWrite(pingPin, HIGH);
- delayMicroseconds(10);
- digitalWrite(pingPin, LOW);
+  long duration;
+  int cm;
 
- pinMode(pingPin, INPUT);
- duration = pulseIn(pingPin, HIGH);
+  digitalWrite(triggerPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(triggerPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(triggerPin, LOW);
 
- cm = microsecondsToCentimeters(duration);
+  duration = pulseIn(echoPin, HIGH);
 
- Serial.println("Distance = " + String(cm) + " cm");
- return cm;
+  cm = microsecondsToCentimeters(duration);
 
+  Serial.println("Distance: " + String(cm) + " cm");
+  return cm;
 }
 
 int microsecondsToCentimeters(long microseconds)
 {
- // The speed of sound is 340 m/s or 29 microseconds per centimeter.
- // The ping from the sensor travels out and back, so to find the distance of the object we
- // take half of the distance travelled.
- return microseconds / 29 / 2;
+  return microseconds / 29 / 2;
 }

@@ -7,7 +7,7 @@ void setup()
 {
  Serial.begin(115200);
  pinMode(ledPin, OUTPUT);
- 
+
  pinMode(triggerPin, OUTPUT);
  pinMode(echoPin, INPUT);
 }
@@ -17,22 +17,22 @@ void loop()
  long duration;
  int cm;
 
-
-
  digitalWrite(triggerPin, LOW);
  delayMicroseconds(2);
  digitalWrite(triggerPin, HIGH);
  delayMicroseconds(10);
  digitalWrite(triggerPin, LOW);
 
-
  delayMicroseconds(2);
  duration = pulseIn(echoPin, HIGH);
 
  cm = microsecondsToCentimeters(duration);
- if (cm > 20) {
+ if (cm > 20)
+ {
   digitalWrite(ledPin, LOW);
- } else {
+ }
+ else
+ {
   digitalWrite(ledPin, HIGH);
  }
 

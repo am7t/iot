@@ -9,19 +9,18 @@
 /****************************************
    Define Constants
  ****************************************/
-#define TOKEN "BBFF-ljWQKFtDZUp04WydBFq0aco2kqJqrT" // Your Ubidots TOKEN
-#define WIFINAME "Nokia 3.1" //Your SSID
-#define WIFIPASS "1234567890" // Your Wifi Pass
+#define TOKEN "BBFF-ljDZUp04WydBFq0aco2kqJqrT" // Your Ubidots TOKEN
+#define WIFINAME "MyWiFiSSID" //Your SSID
+#define WIFIPASS "MyWiFiPassword" // Your Wifi Pass
 
 Ubidots client(TOKEN);
 
 /****************************************
    Auxiliar Functions
  ****************************************/
-
-int testValue = 0;
-int nt = 0;
-unsigned long tick = millis();
+unsigned long t1 = millis();
+unsigned long t2 = t1;
+int ldrValue = 0;
 
 void callback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Message arrived [");
@@ -60,11 +59,15 @@ void loop() {
     client.reconnect();
     client.ubidotsSubscribe("nodemcu", "light"); //Insert the dataSource and Variable's Labels
   }
+  if (millis() - t1 > 200) {
+    ldrValue = readLDRValue();
+    t1 = millis();
+  }
 
-  if (millis() - tick > 10000) {
-    client.add("ldr-value", readLDRValue());
+  if (millis() - t2 > 10000) {
+    client.add("ldr-value", ldrValue);
     client.ubidotsPublish("nodemcu");
-    tick = millis();
+    t2 = millis();
   }
   client.loop();
 }
