@@ -23,11 +23,11 @@
 
 #define AIO_SERVER      "io.adafruit.com"
 #define AIO_SERVERPORT  1883                   // use 8883 for SSL
-#define AIO_USERNAME    "mediumtechnica"
-#define AIO_KEY         "aio_LMST08VILRo5VTu9t5GqOhcYiVBP"
+#define AIO_USERNAME    "mediumthnica"
+#define AIO_KEY         "aio_YiTfSmtmVWAZAOyMM2M7Nx1Au"
 
-#define WIFI_SSID "Nokia 3.1"
-#define WIFI_KEY "1234567890"
+#define WIFI_SSID "MyWiFiName"
+#define WIFI_KEY "MyPassword"
 
 /************ Global State (you don't need to change this!) ******************/
 
@@ -76,7 +76,6 @@ void setup() {
   pinMode(ledPin, OUTPUT);
 }
 
-uint32_t x=0;
 String msg = "";
 
 void loop() {
