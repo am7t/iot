@@ -68,8 +68,6 @@ void loop()
     }
     t2 = millis();
   }
-
-  //delay(20000); // Wait 20 seconds to update the channel again
 }
 
 int getDistance() {
