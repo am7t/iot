@@ -28,19 +28,11 @@ Ubidots client(TOKEN);
 unsigned long tick = millis();
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
+  String message = "";
   for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
+    message += (char)payload[i];
   }
-  if ((char)payload[0] == '1') {
-    digitalWrite(ledPin, LOW);
-  }
-  else {
-    digitalWrite(ledPin, HIGH);
-  }
-  Serial.println();
+  Serial.println("Message arrived [" + topic + "] = " + String(message));
 }
 
 /****************************************
