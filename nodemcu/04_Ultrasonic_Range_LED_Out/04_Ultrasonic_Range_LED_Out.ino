@@ -1,56 +1,71 @@
-#define triggerPin D1
-#define echoPin D2
-#define ledPin D4
+#define triggerPin D0
+#define echoPin D1
+
+#define ledAPin D2
+#define ledBPin D3
+#define ledCPin D4
 
 void setup()
 {
-  Serial.begin(115200);
-  pinMode(triggerPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-  pinMode(ledPin, OUTPUT);
+ Serial.begin(115200);
+ pinMode(ledAPin, OUTPUT);
+ pinMode(ledBPin, OUTPUT);
+ pinMode(ledCPin, OUTPUT);
+
+ pinMode(triggerPin, OUTPUT);
+ pinMode(echoPin, INPUT);
 }
 
 void loop()
 {
-  long duration;
-  int cm;
+ long duration;
+ int cm;
 
-  digitalWrite(triggerPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(triggerPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(triggerPin, LOW);
+ digitalWrite(triggerPin, LOW);
+ delayMicroseconds(2);
+ digitalWrite(triggerPin, HIGH);
+ delayMicroseconds(10);
+ digitalWrite(triggerPin, LOW);
 
-  duration = pulseIn(echoPin, HIGH);
+ delayMicroseconds(2);
+ duration = pulseIn(echoPin, HIGH);
 
-  cm = microsecondsToCentimeters(duration);
+ cm = microsecondsToCentimeters(duration);
+ if (cm < 10)
+ {
+  ledLevel(0, 0, 0);
+ }
 
-  Serial.println("Distance = " + String(cm) + " cm");
+ else if (cm >= 10 && cm < 20)
+ {
+  ledLevel(1, 0, 0);
+ }
 
-  if (cm < 15)
-  {
-    digitalWrite(ledPin, LOW);
-  }
-  else
-  {
-    digitalWrite(ledPin, HIGH);
-  }
+ else if (cm >= 20 && cm < 30)
+ {
+  ledLevel(1, 1, 0);
+ }
 
-  delay(500);
+ else
+ {
+  ledLevel(1, 1, 1);
+ }
+
+ Serial.println("Distance = " + String(cm) + " cm");
+ delay(200);
 }
 
 int microsecondsToCentimeters(long microseconds)
 {
-  // The speed of sound is 340 m/s or 29 microseconds per centimeter.
-  // 340 meter per seconds -> 0.00034 meter per microseconds -> 0.034 centimeter per microseconds
+ // The speed of sound is 340 m/s or 29 microseconds per centimeter.
+ // The ping from the sensor travels out and back, so to find the distance of the object we
+ // take half of the distance travelled.
+ return microseconds / 29 / 2;
+}
 
-  // so instead of multiplying with a float value which takes relatively more time,
-  // the multiplying factor is converted to an integer by taking the reciprocal
-
-  // 0.034 = 1 / 29.4117647059 ≈ 1 / 29
-  
-  // The ping from the sensor travels out and back, so to find the distance of the object
-  // half of the distance travelled is taken.
-
-  return microseconds / 29 / 2;
+void ledLevel(bool stateA, bool stateB, bool stateC)
+{
+ digitalWrite(ledAPin, stateA);
+ digitalWrite(ledBPin, stateB);
+ digitalWrite(ledCPin, stateC);
 }

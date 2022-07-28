@@ -1,0 +1,7 @@
+ThingSpeak	- https://thingspeak.com/
+Ubidots		- https://ubidots.com/
+Adafruit	- https://io.adafruit.com/
+Thinger 	- https://thinger.io/
+Hackster 	- https://www.hackster.io/
+Blynk		- https://blynk.io/
+Hive		- https://hive.io/

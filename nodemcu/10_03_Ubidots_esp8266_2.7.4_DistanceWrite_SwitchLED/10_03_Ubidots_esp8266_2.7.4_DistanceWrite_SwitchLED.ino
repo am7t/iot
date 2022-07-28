@@ -10,7 +10,7 @@
 /****************************************
    Define Constants
  ****************************************/
-#define TOKEN "BBFF-ljWQKFtDZU4WydBFq0aco2kqJqrT" // Your Ubidots TOKEN
+#define TOKEN "BBFF-ljWQKFtDZUp04WydBFq0aco2kqJqrT" // Your Ubidots TOKEN
 #define WIFINAME "MyWiFiSSID" //Your SSID
 #define WIFIPASS "MyWiFiPassword" // Your Wifi Pass
 
@@ -76,7 +76,6 @@ void loop() {
   }
   client.loop();
 }
-
 
 
 int getDistance() {
