@@ -1,5 +1,5 @@
 {
  "Home": "<img src='https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Internet_of_things_signed_by_the_author.jpg/1200px-Internet_of_things_signed_by_the_author.jpg' alt='Internet of Things - Connect with the World'><br>Image Source: <a href='https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Internet_of_things_signed_by_the_author.jpg/1200px-Internet_of_things_signed_by_the_author.jpg'>Wikimedia</a><sup>&reg;</sup>",
  "Slides": "<a href='https://docs.google.com/presentation/d/1xQJH7UZNraHI_Gx8nuPy1Ioe3z6p2sRE/edit?usp=sharing&ouid=113172933169086518136&rtpof=true&sd=true'>Internet of Things (IoT) - Make It Yourself</a>",
- "Source Codes": "<a href='https://github.com/medium-technica/iot/tree/master/src/iot_nodemcu'>IoT Embedded Development using NodeMCU</a>"
+ "Source Codes": "<a href='https://github.com/medium-technica/iot/tree/master/nodemcu'>IoT Embedded Development using NodeMCU</a>"
 }
