@@ -12,22 +12,19 @@ void setup()
 
 void loop()
 {
- long duration;
- int cm;
-
  digitalWrite(triggerPin, LOW);
  delayMicroseconds(2);
  digitalWrite(triggerPin, HIGH);
  delayMicroseconds(10);
  digitalWrite(triggerPin, LOW);
 
- durationMicroSeconds = pulseIn(echoPin, HIGH);
+ long durationMicroSeconds = pulseIn(echoPin, HIGH);
 
- cm = microSecondsToCentimeters(durationMicroSeconds);
+ int distanceCentimeters = microSecondsToCentimeters(durationMicroSeconds);
 
- Serial.println("Distance = " + String(cm) + " cm");
+ Serial.println("Distance = " + String(distanceCentimeters) + " cm");
 
- if (cm < 15)
+ if (distanceCentimeters < 15)
  {
   digitalWrite(ledPin, LOW);
  }
@@ -42,10 +39,11 @@ void loop()
 int microSecondsToCentimeters(long microSeconds)
 {
  // The speed of sound is 340 m/s or 29 microseconds per centimeter.
- // 340 meter per seconds -> 0.00034 meter per microseconds -> 0.034 centimeter per microseconds
+ // 340 meter per seconds = 0.00034 meter per microseconds = 0.034 centimeter per microseconds
 
- // so instead of multiplying with a float value which takes relatively more computation time & memory,
- // the multiplying factor is converted to an integer by taking the reciprocal
+ // instead of multiplying with a float value which takes relatively more computation time & memory,
+ // the multiplication is replaced with division by the reciprocal of 0.034 which is approximately
+ // equal to the integer 29
 
  // 0.034 = 1 / 29.4117647059 ≈ 1 / 29
 

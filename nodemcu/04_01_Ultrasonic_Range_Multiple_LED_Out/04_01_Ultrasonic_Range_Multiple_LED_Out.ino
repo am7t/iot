@@ -18,30 +18,28 @@ void setup()
 
 void loop()
 {
- long duration;
- int cm;
-
  digitalWrite(triggerPin, LOW);
  delayMicroseconds(2);
  digitalWrite(triggerPin, HIGH);
  delayMicroseconds(10);
  digitalWrite(triggerPin, LOW);
-
  delayMicroseconds(2);
- duration = pulseIn(echoPin, HIGH);
 
- cm = microsecondsToCentimeters(duration);
- if (cm < 10)
+ long durationMicroseconds = pulseIn(echoPin, HIGH);
+
+ int distanceCentimeters = microsecondsToCentimeters(durationMicroseconds);
+ 
+ if (distanceCentimeters < 10)
  {
   ledLevel(0, 0, 0);
  }
 
- else if (cm >= 10 && cm < 20)
+ else if (distanceCentimeters >= 10 && distanceCentimeters < 20)
  {
   ledLevel(1, 0, 0);
  }
 
- else if (cm >= 20 && cm < 30)
+ else if (distanceCentimeters >= 20 && distanceCentimeters < 30)
  {
   ledLevel(1, 1, 0);
  }
@@ -51,15 +49,23 @@ void loop()
   ledLevel(1, 1, 1);
  }
 
- Serial.println("Distance = " + String(cm) + " cm");
+ Serial.println("Distance = " + String(distanceCentimeters) + " cm");
  delay(200);
 }
 
 int microsecondsToCentimeters(long microseconds)
 {
  // The speed of sound is 340 m/s or 29 microseconds per centimeter.
- // The ping from the sensor travels out and back, so to find the distance of the object we
- // take half of the distance travelled.
+ // 340 meter per seconds = 0.00034 meter per microseconds = 0.034 centimeter per microseconds
+
+ // instead of multiplying with a float value which takes relatively more computation time & memory,
+ // the multiplication is replaced with division by the reciprocal of 0.034 which is approximately
+ // equal to the integer 29
+
+ // 0.034 = 1 / 29.4117647059 ≈ 1 / 29
+
+ // The ping from the sensor travels out and back, so to find the distance of the object
+ // half of the distance travelled is taken.
  return microseconds / 29 / 2;
 }
 
