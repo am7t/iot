@@ -19,16 +19,17 @@
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
 
-#define WIFI_SSID "MyWiFiName"
-#define WIFI_KEY  "MyWiFiPassWord"
-
 #define ledPin D4
-#define pingPin D1
+#define buttonPin D0;
 
 #define AIO_SERVER      "io.adafruit.com"
 #define AIO_SERVERPORT  1883                   // use 8883 for SSL
-#define AIO_USERNAME    "mediumtechnica"
-#define AIO_KEY         "aio_Zvdv182eawSIAtRSiR352D8H6w6x"
+#define AIO_USERNAME    "mediumthnica"
+#define AIO_KEY         "aio_YiTfSmtmVWAZAOyMM2M7Nx1Au"
+
+#define WIFI_SSID "MyWiFiName"
+#define WIFI_KEY "MyPassword"
+
 
 /************ Global State (you don't need to change this!) ******************/
 
@@ -42,19 +43,19 @@ Adafruit_MQTT_Client mqtt(&client, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO
 
 /****************************** Feeds ***************************************/
 
-// Setup a feed called 'temperature' for publishing.
+// Setup a feed called 'light' for publishing.
 // Notice MQTT paths for AIO follow the form: <username>/feeds/<feedname>
-Adafruit_MQTT_Publish distance = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/distance");
+Adafruit_MQTT_Publish lightPub = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/light");
 
 // Setup a feed called 'light' for subscribing to changes.
-Adafruit_MQTT_Subscribe light = Adafruit_MQTT_Subscribe(&mqtt, AIO_USERNAME "/feeds/light");
+Adafruit_MQTT_Subscribe lightSub = Adafruit_MQTT_Subscribe(&mqtt, AIO_USERNAME "/feeds/light");
 
 /*************************** Sketch Code ************************************/
 
 // Bug workaround for Arduino 1.6.6, it seems to need a function declaration
 // for some reason (only affects ESP8266, likely an arduino-builder bug).
 void MQTT_connect();
-
+attachInterrupt(digitalPinToInterrupt(buttonPin), toggleLight, CHANGE);
 void setup() {
   Serial.begin(115200);
   delay(10);
@@ -77,11 +78,12 @@ void setup() {
   Serial.println("IP address: "); Serial.println(WiFi.localIP());
 
   // Setup MQTT subscription for onoff feed.
-  mqtt.subscribe(&light);
+  mqtt.subscribe(&lightSub);
   pinMode(ledPin, OUTPUT);
+  pinMode(buttonPin, INPUT);
 }
 
-uint32_t x=0;
+bool lightState = false;
 String msg = "";
 
 void loop() {
@@ -89,44 +91,32 @@ void loop() {
   // connection and automatically reconnect when disconnected).  See the MQTT_connect
   // function definition further below.
   MQTT_connect();
+  if (digitalRead(buttonPin) == HIGH) {
+    delay(50);
+    if (buttonState == HIGH) {
+      toggleLight();
+    }
+  }
 
   // this is our 'wait for incoming subscription packets' busy subloop
   // try to spend your time here
 
   Adafruit_MQTT_Subscribe *subscription;
   while ((subscription = mqtt.readSubscription(5000))) {
-    if (subscription == &light) {
-      msg = String((char *)light.lastread);
-      Serial.print(F("Got: "));
-      //Serial.println((char *)light.lastread);
-      Serial.println(msg);
+    if (subscription == &lightSub) {
+      msg = String((char *)lightSub.lastread);
+      Serial.println("Message Arrived: " + msg);
       if (msg == "1") {
-        digitalWrite (ledPin, LOW);
+        lightState = 1;
+        Serial.println("Remote Switch ON");
       } else {
-        digitalWrite (ledPin, HIGH);
+        lightState = 0;
+        Serial.println("Remote Switch OFF");
       }
     }
   }
-
-  // Now we can publish stuff!
-  Serial.println();
-  x = getDistance();
-  Serial.print(F("Sending distance val "));
-  Serial.print(x);
-  Serial.print("...");
-  if (! distance.publish(x)) {
-    Serial.println(F("Failed"));
-  } else {
-    Serial.println(F("OK!"));
-  }
-
-  // ping the server to keep the mqtt connection alive
-  // NOT required if you are publishing once every KEEPALIVE seconds
-  /*
-  if(! mqtt.ping()) {
-    mqtt.disconnect();
-  }
-  */
+  digitalWrite (ledPin, lightState);
+  publishLightState();
 }
 
 // Function to connect and reconnect as necessary to the MQTT server.
@@ -143,43 +133,26 @@ void MQTT_connect() {
 
   uint8_t retries = 3;
   while ((ret = mqtt.connect()) != 0) { // connect will return 0 for connected
-       Serial.println(mqtt.connectErrorString(ret));
-       Serial.println("Retrying MQTT connection in 5 seconds...");
-       mqtt.disconnect();
-       delay(5000);  // wait 5 seconds
-       retries--;
-       if (retries == 0) {
-         // basically die and wait for WDT to reset me
-         while (1);
-       }
+    Serial.println(mqtt.connectErrorString(ret));
+    Serial.println("Retrying MQTT connection in 5 seconds...");
+    mqtt.disconnect();
+    delay(2000);  // wait 5 seconds
+    retries--;
+    if (retries == 0) {
+      // basically die and wait for WDT to reset me
+      while (1);
+    }
   }
   Serial.println("MQTT Connected!");
 }
-
-int getDistance() {
- long duration;
- int cm;
- pinMode(pingPin, OUTPUT);
- digitalWrite(pingPin, LOW);
- delayMicroseconds(2);
- digitalWrite(pingPin, HIGH);
- delayMicroseconds(10);
- digitalWrite(pingPin, LOW);
-
- pinMode(pingPin, INPUT);
- duration = pulseIn(pingPin, HIGH);
-
- cm = microsecondsToCentimeters(duration);
-
- Serial.println("Distance = " + String(cm) + " cm");
- return cm;
-
+void publishLightState() {
+  if (! lightPub.publish(lightState)) {
+    Serial.println("Publish " + String(lightState) + " Failed");
+  } else {
+    Serial.println("Publish " + String(lightState) + " Done!");
+  }
 }
 
-int microsecondsToCentimeters(long microseconds)
-{
- // The speed of sound is 340 m/s or 29 microseconds per centimeter.
- // The ping from the sensor travels out and back, so to find the distance of the object we
- // take half of the distance travelled.
- return microseconds / 29 / 2;
+void toggleLight() {
+  lightState = ~lightState;
 }
