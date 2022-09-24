@@ -11,18 +11,15 @@
 #define WIFI_KEY "october15"
 
 #define ledPin D4
-#define ldrPin A0
 
 bool lightState;
 bool lightStateChanged;
-bool ldrAutoSwitchState = false;
 void publishLightState(void);
 
 #include "SwitchBounceTimerSettings.h"
 
 String msg = "";
 bool remoteSwitchState;
-#define ambientLightMinimum 640
 
 // Create an ESP8266 WiFiClient class to connect to the MQTT server.
 WiFiClient client;
@@ -49,7 +46,6 @@ void MQTT_connect();
 
 void setup() {
   pinMode(ledPin, OUTPUT);
-  pinMode(ldrPin, INPUT);
   initSwitchBounceSettings();
 
   Serial.begin(115200);
@@ -80,18 +76,6 @@ void setup() {
 }
 
 void loop() {
-  int ambientLight = analogRead(ldrPin);
-  Serial.println("Ambient Light Level = " + String(ambientLight));
-  bool ambientLightLow = ambientLight < ambientLightMinimum;
-  bool ambientLightHigh = ambientLight > (ambientLightMinimum + 20);
-  if (remoteSwitchState) {
-    if (ambientLightLow) {
-      digitalWrite(ledPin, LOW);
-    }
-    if (ambientLightHigh) {
-      digitalWrite(ledPin, HIGH);
-    }
-  }
   // Ensure the connection to the MQTT server is alive (this will make the first
   // connection and automatically reconnect when disconnected).  See the MQTT_connect
   // function definition further below.
@@ -143,7 +127,7 @@ void MQTT_connect() {
 
 void publishLightState() {
   lightState = !digitalRead(ledPin);
-  if (!lightPub.publish(lightState)) {
+  if (! lightPub.publish(lightState)) {
     Serial.println("Publish " + String(lightState) + " Failed");
   } else {
     Serial.println("Publish " + String(lightState) + " Done!");
